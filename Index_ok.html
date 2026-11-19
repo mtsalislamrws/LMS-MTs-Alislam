@@ -18,13 +18,28 @@
       background-attachment: fixed;
     }
 
-    /* Penyesuaian khusus layar HP & Tablet potret */
     @media (max-width: 767px) {
       .bg-custom-madrasah {
         background-attachment: scroll;
         background-position: center top;
         background-size: cover;
       }
+    }
+
+    /* Animasi sembunyikan / tampilkan sidebar desktop */
+    #sidebarDesktop {
+      transition: width 0.28s ease, padding 0.28s ease, opacity 0.22s ease;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    #sidebarDesktop.sidebar-collapsed {
+      width: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      opacity: 0;
+      border-right-width: 0 !important;
+      pointer-events: none;
     }
 
     @media print {
@@ -79,17 +94,22 @@
 
   <!-- DASHBOARD UTAMA -->
   <div id="mainApp" class="hidden flex-1 flex flex-col lg:flex-row min-h-screen bg-transparent">
-    <!-- SIDEBAR DESKTOP (PUTIH BERSIH) -->
-    <aside class="hidden lg:flex w-64 bg-white/95 backdrop-blur-md text-slate-700 flex-col justify-between p-4 no-print shadow-xl border-r border-slate-200">
+    <!-- SIDEBAR DESKTOP (BISA DISEMBUH & DIPANGGIL) -->
+    <aside id="sidebarDesktop" class="hidden lg:flex w-64 bg-white/95 backdrop-blur-md text-slate-700 flex-col justify-between p-4 no-print shadow-xl border-r border-slate-200 flex-shrink-0">
       <div class="space-y-6">
-        <div class="flex items-center gap-3 px-2 py-3 border-b border-slate-200">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden bg-white border border-slate-200 shadow-sm flex-shrink-0">
-            <img src="https://lh3.googleusercontent.com/d/1DD_mFaXekg3D-eVpyr3Y4aB-snpgm_VO" alt="Logo" class="w-full h-full object-contain p-0.5">
+        <div class="flex items-center justify-between gap-2 px-2 py-3 border-b border-slate-200">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden bg-white border border-slate-200 shadow-sm flex-shrink-0">
+              <img src="https://lh3.googleusercontent.com/d/1DD_mFaXekg3D-eVpyr3Y4aB-snpgm_VO" alt="Logo" class="w-full h-full object-contain p-0.5">
+            </div>
+            <div class="truncate">
+              <h1 class="font-bold text-slate-900 text-sm leading-tight truncate">LMS MTs Al Islam</h1>
+              <p id="labelRoleUser" class="text-[10px] text-emerald-700 uppercase font-bold tracking-wider truncate">Memuat...</p>
+            </div>
           </div>
-          <div>
-            <h1 class="font-bold text-slate-900 text-sm leading-tight">LMS MTs Al Islam</h1>
-            <p id="labelRoleUser" class="text-[10px] text-emerald-700 uppercase font-bold tracking-wider">Memuat...</p>
-          </div>
+          <button type="button" onclick="toggleSidebarDesktop()" class="p-2 text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-colors flex-shrink-0" title="Sembunyikan Menu">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
         </div>
 
         <nav class="space-y-1.5 text-sm font-medium">
@@ -143,11 +163,11 @@
 
       <div class="pt-4 border-t border-slate-200">
         <div class="flex items-center justify-between px-2 mb-2">
-          <div>
-            <p id="labelNamaUser" class="text-xs font-bold text-slate-900">-</p>
-            <p id="labelInfoKelasSiswa" class="text-[10px] text-slate-500">Online</p>
+          <div class="min-w-0">
+            <p id="labelNamaUser" class="text-xs font-bold text-slate-900 truncate">-</p>
+            <p id="labelInfoKelasSiswa" class="text-[10px] text-slate-500 truncate">Online</p>
           </div>
-          <button onclick="logout()" class="p-2.5 text-rose-600 hover:bg-rose-50 rounded-xl transition-colors" title="Keluar">
+          <button onclick="logout()" class="p-2.5 text-rose-600 hover:bg-rose-50 rounded-xl transition-colors flex-shrink-0" title="Keluar">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
         </div>
@@ -156,9 +176,13 @@
 
     <!-- KONTEN UTAMA -->
     <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-transparent min-h-screen">
-      <!-- HEADER PUTIH -->
+      <!-- HEADER PUTIH DENGAN TOMBOL TOGGLE MENU -->
       <header class="flex justify-between items-center gap-4 mb-6 bg-white/95 backdrop-blur-xl p-4 sm:p-6 rounded-3xl shadow-lg border border-slate-200">
         <div class="flex items-center gap-3">
+          <button type="button" id="btnToggleSidebarHeader" onclick="toggleSidebarDesktop()" class="hidden lg:flex items-center gap-2 px-3.5 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-2xl text-xs font-bold transition-colors" title="Tampilkan / Sembunyikan Menu">
+            <i id="iconToggleSidebarHeader" class="fa-solid fa-bars"></i>
+            <span id="labelToggleSidebarHeader">Sembunyikan Menu</span>
+          </button>
           <div class="w-11 h-11 rounded-2xl bg-white border border-slate-200 flex items-center justify-center overflow-hidden shadow-sm flex-shrink-0 lg:hidden">
             <img src="https://lh3.googleusercontent.com/d/1DD_mFaXekg3D-eVpyr3Y4aB-snpgm_VO" alt="Logo" class="w-full h-full object-contain p-0.5">
           </div>
@@ -180,7 +204,7 @@
         </div>
       </header>
 
-      <!-- KARTU SAMBUTAN UTAMA (PUTIH BERSIH) -->
+      <!-- KARTU SAMBUTAN UTAMA -->
       <div class="bg-white/95 backdrop-blur-xl p-5 sm:p-6 rounded-3xl shadow-lg border border-slate-200 mb-6 relative overflow-hidden">
         <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="flex items-center gap-4 relative z-10">
@@ -198,7 +222,7 @@
         </div>
       </div>
 
-      <!-- KARTU STATISTIK ATAS (PUTIH BERSIH) -->
+      <!-- KARTU STATISTIK ATAS -->
       <div id="statCardsContainer" class="grid grid-cols-2 gap-3 sm:gap-4 mb-6">
         <div id="cardTotalSiswa" class="bg-white/95 backdrop-blur-md p-4 rounded-3xl shadow-lg border border-slate-200 flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-500 text-xs font-semibold mb-2"><span>Total Siswa</span><i class="fa-solid fa-users text-blue-600"></i></div>
@@ -210,7 +234,7 @@
         </div>
       </div>
 
-      <!-- MENU CEPAT (GRID 3 KOLOM - PUTIH BERSIH) -->
+      <!-- MENU CEPAT (GRID 3 KOLOM) -->
       <div class="mb-6">
         <h3 class="font-bold text-sm text-slate-900 mb-3 px-1">Menu Cepat</h3>
         <div class="grid grid-cols-3 gap-3">
@@ -253,7 +277,7 @@
         </div>
       </div>
 
-      <!-- AKTIVITAS JURNAL TERBARU (PUTIH BERSIH) -->
+      <!-- AKTIVITAS JURNAL TERBARU -->
       <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-lg border border-slate-200 p-5">
         <h3 id="judulDashboardBagianBawah" class="font-bold text-sm text-slate-800 mb-3 flex items-center justify-between">
           <span class="flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-emerald-600"></i> Aktivitas Jurnal Mengajar Terbaru</span>
@@ -265,7 +289,7 @@
     </main>
   </div>
 
-  <!-- BOTTOM NAVIGATION BAR (KHUSUS TAMPILAN HP - PUTIH BERSIH) -->
+  <!-- BOTTOM NAVIGATION BAR (KHUSUS TAMPILAN HP) -->
   <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 px-4 py-2.5 flex justify-around items-center z-40 shadow-xl">
     <button onclick="bukaDashboard()" class="flex flex-col items-center text-emerald-600 gap-1 transition-colors">
       <i class="fa-solid fa-house text-lg"></i>
@@ -602,6 +626,24 @@
     let html5QrCode = null;
     let cacheSemuaMateri = [];
     let cacheSemuaJurnal = [];
+    let sidebarTersembunyi = false;
+
+    function toggleSidebarDesktop() {
+      sidebarTersembunyi = !sidebarTersembunyi;
+      const sidebar = document.getElementById('sidebarDesktop');
+      const icon = document.getElementById('iconToggleSidebarHeader');
+      const label = document.getElementById('labelToggleSidebarHeader');
+
+      if (sidebarTersembunyi) {
+        sidebar.classList.add('sidebar-collapsed');
+        icon.className = 'fa-solid fa-bars';
+        label.innerText = 'Tampilkan Menu';
+      } else {
+        sidebar.classList.remove('sidebar-collapsed');
+        icon.className = 'fa-solid fa-angles-left';
+        label.innerText = 'Sembunyikan Menu';
+      }
+    }
 
     function bukaAplikasiNilaiEksternal() {
       window.open("https://script.google.com/macros/s/AKfycbw_McDXg4J4aErpuQmXryEc4jZDg75sJ56NWjpx3kk70YUBhSTLk0d-D-3z64aSjXPN/exec", '_blank');
